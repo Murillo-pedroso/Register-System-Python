@@ -256,6 +256,9 @@ descontobox.grid(row=13, column=1, padx=5)
 clientebox = Entry(Register_frame)
 clientebox.grid(row=14, column=1, padx=5)
 
+botelhobox = Entry(Register_frame)
+botelhobox.grid(row=15, column=1, padx=5)
+
 # Add funcionario
 add_clientebtn = Button(
     Register_frame, text="Cadastrar o cliente", fg=scolor, bg=tcolor)
