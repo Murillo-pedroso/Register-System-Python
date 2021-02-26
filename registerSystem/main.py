@@ -57,14 +57,15 @@ c.execute("CREATE DATABASE IF NOT EXISTS meu_estacionamento")
 c.execute("SHOW DATABASES")
 for db in c:
     print(db)
+    
+#c.execute("SELECT * FROM clientes")
+#print(c.description)
+
+for item in c.description:
+    print(item)
 
 # Excluir tabela:
 #c.execute("DROP TABLE clientes")
-
-
-# Criar tabela no banco de dados
-# Usar a linha abaixo para criar a tabela pela primeira vez
-
 c.execute("CREATE TABLE IF NOT EXISTS clientes (user_id INT AUTO_INCREMENT PRIMARY KEY,\
     nome VARCHAR(255) ,\
     email VARCHAR(255),\
@@ -149,7 +150,12 @@ def modoEscurofun():
     add_clientebtn.config(bg=tcolor, fg='black')
     limpar_clientebtn.config(bg=tcolor, fg='black')
 
-
+def selecionar_dados():
+    c.execute("SELECT * FROM clientes")
+    result = c.fetchall()
+    for x in result:
+        print(x,"\n")
+        
 def limpar_campos():
     nomebox.delete(0, END)
     sobrenomebox.delete(0, END)
@@ -164,7 +170,15 @@ def limpar_campos():
     metodo_pagamentobox.delete(0, END)
     descontobox.delete(0, END)
 
-
+def cadastrar_user():
+    sql_command ="INSERT INTO clientes (nome,email,cep,cidade,estado,pais,metodo_pagamento,desconto,sobrenome,endereco,placa_carro,preco) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    values = (nomebox.get(),emailbox.get(),cepbox.get(),cidadebox.get(),estadobox.get(),paisbox.get(),metodo_pagamentobox.get(),descontobox.get(),sobrenomebox.get(),enderecobox.get(),placa_carrobox.get(),precobox.get())
+    c.execute(sql_command, values)
+    
+    mydb.commit()
+    
+    limpar_campos()
+    selecionar_dados()
 titulolbl = Label(root, text="Meu estacionamento", font=(
     "Helvetica", 14), background=pcolor, fg=scolor)
 titulolbl.place(x=-10, y=0, relwidth=1)
@@ -253,14 +267,18 @@ metodo_pagamentobox.grid(row=12, column=1, padx=5)
 descontobox = Entry(Register_frame)
 descontobox.grid(row=13, column=1, padx=5)
 
-
 # Add funcionario
 add_clientebtn = Button(
-    Register_frame, text="Cadastrar o cliente", fg=scolor, bg=tcolor)
+    Register_frame, text="Cadastrar o cliente",command=cadastrar_user, fg=scolor, bg=tcolor)
 add_clientebtn.grid(row=14, column=0, pady=25, padx=10)
 limpar_clientebtn = Button(
     Register_frame, text="Limpar seleções", fg=scolor, bg=tcolor, command=limpar_campos)
 limpar_clientebtn.grid(row=14, column=1, pady=10, padx=10)
+
+selecionar_dados()
+
+# Criar tabela no banco de dados
+# Usar a linha abaixo para criar a tabela pela primeira vez
 
 
 root.mainloop()
